@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 const SplashScreen = ({ navigation }) => {
     useEffect(() => {
         setTimeout(() => {
-            navigation.replace('Login'); // Redirects to Login Screen after 3 seconds
+            navigation.replace('Login'); 
         }, 3000);
     }, []);
 
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
         width: 300,  
         height: 300,  
         resizeMode: 'contain', 
-        marginBottom: 20, // Adds space between logo and text
+        marginBottom: 20, 
     },
     text: {
         fontSize: 32,
