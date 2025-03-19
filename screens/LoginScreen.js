@@ -1,9 +1,42 @@
-import React from 'react';
-import { View, Text, TextStyles, StyleSheet, Button, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Button, Image, TouchableOpacity, Animated } from 'react-native';
 
 const LoginScreen = ({ navigation }) => {
+    const [showSignInOptions, setShowSignInOptions] = useState(false);
+    const opacityAnim = useRef(new Animated.Value(1)).current;
+
+    const handleSignInPress = () => {
+        Animated.timing(opacityAnim, {
+            toValue: 0,
+            duration: 150,
+            useNativeDriver: true,
+        }).start(() => {
+            setShowSignInOptions(true);
+            Animated.timing(opacityAnim, {
+                toValue: 1,
+                duration: 150,
+                useNativeDriver: true,
+            }).start();
+        });
+    };
+
+const handleReturnPress = () => {
+    Animated.timing(opacityAnim, {
+        toValue: 0, 
+        duration: 150,
+        useNativeDriver: true,
+    }).start(() => {
+        setShowSignInOptions(false); 
+        Animated.timing(opacityAnim, {
+            toValue: 1, 
+            duration: 150,
+            useNativeDriver: true,
+        }).start();
+    });
+};
     return (
-        <View style={styles.container}>
+        //TERMS OF SERVICE
+        <View style={styles.container}> 
             <Image source={require('../assets/images/weekndr.png')} style={styles.logo} />
             <Text style={styles.header}>
                 don't {' '}
@@ -19,13 +52,47 @@ const LoginScreen = ({ navigation }) => {
                 <Text style={[styles.underline, styles.tosLink]}>Cookies Policy</Text>.
             </Text>
 
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate('InputPhoneNumber')}
-            >
-                <Text style={styles.buttonText}>Sign in with Phone Number</Text> 
-            </TouchableOpacity>
-        
+            {/* Initial Interactive Buttons */}
+            {!showSignInOptions ? (
+                <Animated.View style={{ opacity: opacityAnim }}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => navigation.navigate('CreateAccount')}
+                    >
+                        <Text style={styles.buttonText}>Create account</Text>
+                    </TouchableOpacity>    
+                
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={handleSignInPress}
+                    >
+                        <Text style={styles.buttonText}>Sign in</Text>
+                    </TouchableOpacity>    
+                </Animated.View> 
+            ) : (
+                <Animated.View style={{ opacity: opacityAnim }}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => navigation.navigate('InputPhoneNumber')}
+                    >
+                        <Text style={styles.buttonText}>Sign in with Phone Number</Text> 
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => navigation.navigate('InputPhoneNumber')}
+                    >
+                        <Text style={styles.buttonText}>Sign in with Apple</Text> 
+                    </TouchableOpacity>
+                        
+                     <TouchableOpacity
+                        style={styles.returnButton}
+                        onPress={handleReturnPress}
+                    >
+                        <Text style={styles.returnButtonText}>Return to Create Account</Text> 
+                    </TouchableOpacity>
+                </Animated.View>
+            )}
             <Button title="Replay" onPress={() => navigation.replace('Splash')} />
         </View>
     );
@@ -68,21 +135,33 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
     },
     italic: {
-        fontStyle: 'italic',
         fontWeight: 'bold',
     },
     buttonText: {
         color: 'black',
         fontWeight: 'bold',
-        fontSize: '14',
-        padding: 12,
+        fontSize: 16,
+        padding: 14,
         textAlign: 'center',
     },
     button: {
         backgroundColor: 'white',
-        marginTop: 30,
+        marginTop: 15,
         borderRadius: 50,
         width: 330,
+    },
+    returnButton: {
+        backgroundColor: 'white',
+        marginTop: 15,
+        borderRadius: 50,
+        width: 330,        
+    },
+    returnButtonText: {
+        color: 'red',
+        fontWeight: 'bold',
+        fontSize: 16,
+        padding: 14,
+        textAlign: 'center',        
     }
 });
 
